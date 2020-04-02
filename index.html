@@ -1,0 +1,115 @@
+<!--
+
+index.html for CCASPC
+
+--co-authors: Jacob Wisniewski
+			  Nicholas Spencer
+			  
+Professor: Bruce Maxim
+
+Course: CIS 375.001, Software Engineering
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>Control Charts Assistance</title>
+
+<!-- Quick CSS classes (I know it's not really supposed to be in here) -->
+<style type="text/css">
+	.relative-shown{
+		position: relative;
+		visibility: visible;
+}
+
+	.relative-hidden{
+		position: relative;
+		visibility: hidden;
+}
+
+	.absolute{
+		position: absolute;
+}
+
+</style>
+
+</head>
+
+<!-------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------->
+
+<body style="height: 768px; width: 1463px; left: 0px; top: 0px;">
+
+<h1 style="text-align: center; width: 1112px; left: 10px; top: 25px;" class="relative">Control Graph</h1>
+
+<!-- Container for graph rendering -->
+<div class="absolute" id="canvas-holder" style="width: 1122px; height: 605px; left: 15px; top: 87px; right: 323px;">
+</div>
+
+<!-- Drop-down lists container for x/y-axes values -->
+<div style="text-align: right; width: 295px; left: 1141px; top: 67px; height: 553px;" class="relative-shown">
+	<strong>Time Interval:</strong><br>
+	<select name="time_interval_list" id="time-interval-drop">
+		<option value="days" selected="selected">Days</option>
+		<option value="weeks">Weeks</option>
+		<option value="months">Months</option>
+	</select>
+	<br>
+	<br>
+	
+	<strong>Work Metric:<br></strong>
+	<select name="work_metric_list" id="work-metric-drop">
+		<option value="kloc" selected="selected">KLOC</option>
+		<option value="fp">Function Points</option>
+	</select><br><br>
+	
+<!-- Initial Three Values container that can be set to hidden -->					
+	<div id="initial-div" class="relative-shown">
+		<strong>Initial Three Values:</strong><br>
+		<input name="first_point" id="first-point-text" size="15"><br>
+		<input name="second_point" id="second-point-text" size="15" type="text"><br>
+		<input id="third-point-text" name="third_point" size="15" type="text"><br>
+		<button type="submit" id="submit-initial" style="width: 145px">Add initial points...</button>
+	</div>
+	
+		<br>
+		
+<!-- Graph Calculation container -->
+	<div>
+		<strong>
+		      Max:<input id="graph-max" name="graph_max" readonly="readonly" size="5" type="text"><br>
+		      Min:<input id="graph-min" name="graph_min" readonly="readonly" size="5" type="text"><br>
+		     Mean:<input id="graph-mean" name="graph_mean" readonly="readonly" size="5" type="text"><br>
+		   <!--Median:<input id="graph-median" name="graph_median" readonly="readonly" size="5" type="text"><br> -->
+		Deviation:<input id="graph-deviation" name="graph_deviation" readonly="readonly" size="5" type="text"><br>
+		 Variance:<input id="graph-variance" name="graph_variance" readonly="readonly" size="5" type="text"><br>
+		</strong>
+	</div>
+	
+		<br>
+		<button type="button" id="save-button0" style="width: 125px"><strong>Save to File...</strong></button>
+		&nbsp;
+		<button type="button" id="load-button0" style="width: 125px"><strong>Load from File...</strong></button>
+		<input type="file" id="file-input" style="display: none;">
+</div>
+
+<!-- Add a Point container that can be set to shown -->	
+<div id="running-div" class="relative-hidden" style="text-align: right; left: 1279px; top: -362px; width: 157px;">
+	<strong>Add a Point:<br></strong>
+	<input name="add_point" id="add-point-text" size="15" type="text"><br>
+	<button type="submit" id="submit-add" style="width: 145px">Add a point...</button>
+</div>
+
+<!--Script import -->
+<script src="js/data.js"></script>
+<script src="js/p5.js"></script>
+<script src="js/statistics_handler.js"></script>
+<script src="js/handler.js"></script>
+<script src="js/drawing_handler.js"></script>
+
+</body>
+</html>
