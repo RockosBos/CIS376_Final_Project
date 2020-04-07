@@ -44,14 +44,15 @@ Course: CIS 375.001, Software Engineering
 
 <body style="height: 768px; width: 1463px; left: 0px; top: 0px;">
 
-<h1 style="text-align: center; width: 1112px; left: 10px; top: 25px;" class="relative">Control Graph</h1>
+<h1 style="text-align: center; width: 1112px; left: 10px; top: 25px;" class="relative">
+Project Tracker</h1>
 
 <!-- Container for graph rendering -->
 <div class="absolute" id="canvas-holder" style="width: 1122px; height: 605px; left: 15px; top: 87px; right: 323px;">
 </div>
 
 <!-- Drop-down lists container for x/y-axes values -->
-<div style="text-align: right; width: 295px; left: 1141px; top: 67px; height: 553px;" class="relative-shown">
+<div style="text-align: right; width: 295px; left: 1141px; top: 67px; height: 688px;" class="relative-shown">
 	<strong>Time Interval:</strong><br>
 	<select name="time_interval_list" id="time-interval-drop">
 		<option value="days" selected="selected">Days</option>
@@ -68,6 +69,11 @@ Course: CIS 375.001, Software Engineering
 	</select><br><br>
 	
 <!-- Initial Three Values container that can be set to hidden -->					
+	<div id="estimate" class="relative-shown" style="left: 0px; top: 175px">
+		<strong>Estimated KLOC/FP per Period:<br></strong>
+		<input name="estimate-progress" id="estimate-progress-text" size="15"><br>
+	</div>
+	
 	<div id="initial-div" class="relative-shown">
 		<strong>Initial Three Values:</strong><br>
 		<input name="first_point" id="first-point-text" size="15"><br>
@@ -79,6 +85,7 @@ Course: CIS 375.001, Software Engineering
 		<br>
 		
 <!-- Graph Calculation container -->
+	<br><br><br><br>
 	<div>
 		<strong>
 		      Max:<input id="graph-max" name="graph_max" readonly="readonly" size="5" type="text"><br>
@@ -87,6 +94,8 @@ Course: CIS 375.001, Software Engineering
 		   <!--Median:<input id="graph-median" name="graph_median" readonly="readonly" size="5" type="text"><br> -->
 		Deviation:<input id="graph-deviation" name="graph_deviation" readonly="readonly" size="5" type="text"><br>
 		 Variance:<input id="graph-variance" name="graph_variance" readonly="readonly" size="5" type="text"><br>
+		Estimate Cost:<input id="graph-estimate-cost" name="graph_estimate_cost" readonly="readonly" size="5" type="text"><br>
+		Actual Cost:<input id="graph-actual-cost" name="graph_actual_cost" readonly="readonly" size="5" type="text"><br>
 		</strong>
 	</div>
 	
@@ -98,7 +107,7 @@ Course: CIS 375.001, Software Engineering
 </div>
 
 <!-- Add a Point container that can be set to shown -->	
-<div id="running-div" class="relative-hidden" style="text-align: right; left: 1279px; top: -362px; width: 157px;">
+<div id="running-div" class="relative-hidden" style="text-align: right; left: 1279px; top: -437px; width: 157px;">
 	<strong>Add a Point:<br></strong>
 	<input name="add_point" id="add-point-text" size="15" type="text"><br>
 	<button type="submit" id="submit-add" style="width: 145px">Add a point...</button>
