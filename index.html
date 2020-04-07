@@ -16,7 +16,7 @@ Course: CIS 375.001, Software Engineering
 <head>
 
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-<title>Control Charts Assistance</title>
+<title>Project Tracker</title>
 
 <!-- Quick CSS classes (I know it's not really supposed to be in here) -->
 <style type="text/css">
@@ -42,7 +42,7 @@ Course: CIS 375.001, Software Engineering
 ---------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------->
 
-<body style="height: 768px; width: 1463px; left: 0px; top: 0px;">
+<body style="height: 844px; width: 1463px; left: 0px; top: 0px;">
 
 <h1 style="text-align: center; width: 1112px; left: 10px; top: 25px;" class="relative">
 Project Tracker</h1>
@@ -60,20 +60,31 @@ Project Tracker</h1>
 		<option value="months">Months</option>
 	</select>
 	<br>
-	<br>
 	
 	<strong>Work Metric:<br></strong>
 	<select name="work_metric_list" id="work-metric-drop">
-		<option value="kloc" selected="selected">KLOC</option>
+		<option value="loc" selected="selected">LOC</option>
 		<option value="fp">Function Points</option>
-	</select><br><br>
+	</select>
+	<br>
 	
-<!-- Initial Three Values container that can be set to hidden -->					
-	<div id="estimate" class="relative-shown" style="left: 0px; top: 175px">
-		<strong>Estimated KLOC/FP per Period:<br></strong>
+	<strong>Programming Language:<br></strong>
+	<select name="language_metric_list" id="language-metric-drop">
+		<option value="cSharp" selected="selected">C#</option>
+		<option value="cPlusPlus">C++</option>
+		<option value="javaLanguage">Java</option>
+		<option value="javascriptLanguage">Javascript</option>
+		<option value="HTML">HTML</option>
+		<option value="visualBasic">Visual Basic</option>
+	</select>
+	<br>
+	
+	<strong>Estimated LOC/FP per Interval:<br></strong>
 		<input name="estimate-progress" id="estimate-progress-text" size="15"><br>
-	</div>
+	<br>
+
 	
+<!-- Initial Three Values container that can be set to hidden -->						
 	<div id="initial-div" class="relative-shown">
 		<strong>Initial Three Values:</strong><br>
 		<input name="first_point" id="first-point-text" size="15"><br>
@@ -81,8 +92,7 @@ Project Tracker</h1>
 		<input id="third-point-text" name="third_point" size="15" type="text"><br>
 		<button type="submit" id="submit-initial" style="width: 145px">Add initial points...</button>
 	</div>
-	
-		<br>
+	<br>
 		
 <!-- Graph Calculation container -->
 	<br><br><br><br>
@@ -107,7 +117,7 @@ Project Tracker</h1>
 </div>
 
 <!-- Add a Point container that can be set to shown -->	
-<div id="running-div" class="relative-hidden" style="text-align: right; left: 1279px; top: -437px; width: 157px;">
+<div id="running-div" class="relative-hidden" style="text-align: right; left: 1279px; top: -407px; width: 157px;">
 	<strong>Add a Point:<br></strong>
 	<input name="add_point" id="add-point-text" size="15" type="text"><br>
 	<button type="submit" id="submit-add" style="width: 145px">Add a point...</button>

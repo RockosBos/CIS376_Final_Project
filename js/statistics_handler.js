@@ -151,6 +151,7 @@ function calcTimeMed(data){
         
     return ((data[half-1].x + data[half].x) / 2.0);
 }
+
 function calcMetricMed(data){
     data.sort( function(a,b) {return a - b;} );
 
@@ -161,4 +162,19 @@ function calcMetricMed(data){
     else
 
     return ((data[half-1].y + data[half].y) / 2.0);
+}
+
+function calcEstimateCost(data){
+   var i, estimateCost, length = data.length; sum = 0;
+  for (i = 0; i < data.length; i++) {
+    sum += data[i].y;
+  }
+  loc = sum;
+
+}
+function calcActualCost(data){
+  var i, actualCost, length = data.length; sum = 0;
+  for (i = 0; i < data.length; i++) {
+    sum += data[i].y;
+  }
 }

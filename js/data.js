@@ -11,12 +11,15 @@ Course: CIS 375.001, Software Engineering
 
 */
 
+var langType = 0;
+
 // chart class definition
-function Chart(metric=0, time=0) {
+function Chart(metric=0, time=0, programLang=0) {
 	this.numberOfPoints = 0;
 	this.points = [];
 	this.metricType = metric;
 	this.timeType = time;
+	this.langType = programLang;
 	this.mean = 0;
 	this.median = 0;
 	this.max = 0;
@@ -25,6 +28,8 @@ function Chart(metric=0, time=0) {
 	this.maxTime = 0;
 	this.variance = 0;
 	this.stdDeviation = 0;
+	this.estimateCost = 0;
+	this.actualCost = 0;
 }
 
 Chart.prototype.update = function () {
@@ -37,6 +42,8 @@ Chart.prototype.update = function () {
 	this.minTime = calcTimeMin(this.points);
 	this.variance = calcMetricVar(this.points);
 	this.stdDeviation = calcMetricStdDev(this.points);
+	this.estCost = 0;
+	this.actCost = 0;
 	needsToUpdate = true;
 }
 
@@ -56,9 +63,13 @@ Chart.prototype.addPoint = function(point) {
 	this.update();
 }
 
+/*Chart.prototype.addEstimatePoint = function(estimatePoint) {
+	if(!
+} */
+
 Chart.prototype.getMetric = function() {
 	if(this.metricType === 0) {
-		return "KLOC";
+		return "LOC";
 	}
 	else if(this.metricType === 1) {
 		return "Function Points";

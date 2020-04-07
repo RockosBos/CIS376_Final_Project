@@ -38,11 +38,14 @@ var secondPointTextbox = document.getElementById("second-point-text");
 var thirdPointTextbox = document.getElementById("third-point-text");
 var timeIntervalDropdown = document.getElementById("time-interval-drop");
 var metricDropdown = document.getElementById("work-metric-drop");
+var progLangDropdown = document.getElementById("language-metric-drop");
 var maxLabel = document.getElementById("graph-max");
 var minLabel = document.getElementById("graph-min");
 var mean = document.getElementById("graph-mean");
 var deviation = document.getElementById("graph-deviation");
 var variance = document.getElementById("graph-variance");
+var estimateCost = document.getElementById("graph-estimate-cost");
+var actualCost = document.getElementById("graph-actual-cost");
 
 // test functions
 function addRandom() {
@@ -158,10 +161,28 @@ timeIntervalDropdown.onchange = function() {
 // Handle Metric Type dropdown
 metricDropdown.onchange = function() {
 	var val = metricDropdown.value;
-	if(val === "kloc")
+	if(val === "loc")
 		chart.metricType = 0;
 	if(val === "fp")
 		chart.metricType = 1;
+	update();
+};
+
+//Handle Programming Language dropdown
+progLangDropdown.onchange = function() {
+	var val = progLangDropdown.value;
+	if(val === "cSharp")
+		chart.langType = 0;
+	if(val === "cPlusPlus")
+		chart.langType = 1;
+	if(val === "javaLanguage")
+		chart.langType = 2;
+	if(val === "javascriptLanguage")
+		chart.langType = 3;
+	if(val === "HTML")
+		chart.langType = 4;
+	if(val === "visualBasic")
+		chart.langType = 5;
 	update();
 };
 
@@ -179,11 +200,29 @@ function updateDropdowns() {
 	}
 
 	if(chart.metricType === 0) {
-		metricDropdown.value = "kloc";
+		metricDropdown.value = "loc";
 	}
 	else {
 		metricDropdown.value = "fp";
 	}
+
+	if (chart.langType === 0){
+		progLangDropdown.value = "cSharp"
+	}
+	else if (chart.langType === 1){
+		progLangDropdown.value = "cPlusPlus"
+	}
+	else if (chart.langType === 2){
+		progLangDropdown.value = "javaLanguage"
+	}
+	else if (chart.langType === 3){
+		progLangDropdown.value = "javascriptLanguage"
+	}
+	else if (chart.langType === 4){
+		progLangDropdown.value = "HTML"
+	}
+	else
+		progLangDropdown.value = "visualBasic"
 }
 
 function updateLabels() {
@@ -192,6 +231,8 @@ function updateLabels() {
 	mean.value = chart.mean.toFixed(3);
 	deviation.value = chart.stdDeviation.toFixed(3);
 	variance.value = chart.variance.toFixed(3);
+	estimateCost.value = chart.estCost.toFixed(3);
+	actualCost.value = chart.actCost.toFixed(3);
 }
 
 // bring all these update functions into one for easier editing later on

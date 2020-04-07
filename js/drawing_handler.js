@@ -125,6 +125,8 @@ function drawGraph() {
 	var max = chart.max;
 	var minTime = chart.minTime;
 	var maxTime = chart.maxTime;
+	var estimateCost = chart.estimateCost;
+	var actualCost = chart.actualCost;
 
 	// come up with optimal bounds for y-axis
 	var yMin = 0;
@@ -275,7 +277,7 @@ function drawGraph() {
 	textSize(12);
 	textAlign(CENTER, CENTER);
 	strokeWeight(0);
-	text('Control Chart for Statistical Process Control', width / 2, 25);
+	text('Project Tracker', width / 2, 25);
 	text('Time Value: (' + chart.getTime() + ')', width / 2, height - 25);
 	translate(width / 2, height / 2);
 	rotate(-PI/2);

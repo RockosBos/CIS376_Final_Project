@@ -1,2 +1,1 @@
-# CCASPC
-Control Chart Assistant for Statistical Process Control
+# Project Tracker
