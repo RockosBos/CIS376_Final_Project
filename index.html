@@ -20,18 +20,24 @@ Course: CIS 375.001, Software Engineering
 
 <!-- Quick CSS classes (I know it's not really supposed to be in here) -->
 <style type="text/css">
-	.relative-shown{
+.relative-shown{
 		position: relative;
 		visibility: visible;
 }
 
-	.relative-hidden{
+.relative-hidden{
 		position: relative;
 		visibility: hidden;
 }
 
-	.absolute{
+.absolute{
 		position: absolute;
+}
+
+.interaction-menu{
+	position: relative;
+	visibility: visible;
+	text-align: right;
 }
 
 </style>
@@ -44,32 +50,33 @@ Course: CIS 375.001, Software Engineering
 
 <body style="height: 844px; width: 1463px; left: 0px; top: 0px;">
 
-<h1 style="text-align: center; width: 1112px; left: 10px; top: 25px;" class="relative">
-Project Tracker</h1>
+<h1 style="text-align: center; width: 1112px; left: 10px; top: 25px;" class="relative">Project Tracker</h1>
 
-<!-- Container for graph rendering -->
+<!-- Container for variance graph rendering -->
 <div class="absolute" id="canvas-holder" style="width: 1122px; height: 605px; left: 15px; top: 87px; right: 323px;">
 </div>
 
+<!-- Container for estimate graph rendering -->
+
 <!-- Drop-down lists container for x/y-axes values -->
-<div style="text-align: right; width: 295px; left: 1141px; top: 67px; height: 688px;" class="relative-shown">
+<div style="width: 295px; left: 1141px; top: 67px; height: 688px;" class="interaction-menu">
 	<strong>Time Interval:</strong><br>
-	<select name="time_interval_list" id="time-interval-drop">
+	<select name="time_interval_list" id="time-interval-drop" dir="rtl">
 		<option value="days" selected="selected">Days</option>
 		<option value="weeks">Weeks</option>
 		<option value="months">Months</option>
 	</select>
 	<br>
 	
-	<strong>Work Metric:<br></strong>
-	<select name="work_metric_list" id="work-metric-drop">
+	<strong>Work Metric:</strong><br>
+	<select name="work_metric_list" id="work-metric-drop" dir="rtl">
 		<option value="loc" selected="selected">LOC</option>
 		<option value="fp">Function Points</option>
 	</select>
 	<br>
 	
-	<strong>Programming Language:<br></strong>
-	<select name="language_metric_list" id="language-metric-drop">
+	<strong>Programming Language:</strong><br>
+	<select name="language_metric_list" id="language-metric-drop" dir="rtl">
 		<option value="cSharp" selected="selected">C#</option>
 		<option value="cPlusPlus">C++</option>
 		<option value="javaLanguage">Java</option>
@@ -79,36 +86,34 @@ Project Tracker</h1>
 	</select>
 	<br>
 	
-	<strong>Estimated LOC/FP per Interval:<br></strong>
-		<input name="estimate-progress" id="estimate-progress-text" size="15"><br>
+	<strong>Estimated LOC/FP per Interval:</strong><br>
+		<input name="estimate-progress" id="estimate-progress-text" size="15" dir="rtl"><br>
 	<br>
 
 	
 <!-- Initial Three Values container that can be set to hidden -->						
 	<div id="initial-div" class="relative-shown">
 		<strong>Initial Three Values:</strong><br>
-		<input name="first_point" id="first-point-text" size="15"><br>
-		<input name="second_point" id="second-point-text" size="15" type="text"><br>
-		<input id="third-point-text" name="third_point" size="15" type="text"><br>
+		<input name="first_point" id="first-point-text" size="15" dir="rtl"><br>
+		<input name="second_point" id="second-point-text" size="15" dir="rtl"><br>
+		<input name="third_point" id="third-point-text" size="15" dir="rtl"><br>
 		<button type="submit" id="submit-initial" style="width: 145px">Add initial points...</button>
 	</div>
-	<br>
+	<br><br><br><br><br>
 		
 <!-- Graph Calculation container -->
-	<br><br><br><br>
 	<div>
 		<strong>
-		      Max:<input id="graph-max" name="graph_max" readonly="readonly" size="5" type="text"><br>
-		      Min:<input id="graph-min" name="graph_min" readonly="readonly" size="5" type="text"><br>
-		     Mean:<input id="graph-mean" name="graph_mean" readonly="readonly" size="5" type="text"><br>
-		   <!--Median:<input id="graph-median" name="graph_median" readonly="readonly" size="5" type="text"><br> -->
-		Deviation:<input id="graph-deviation" name="graph_deviation" readonly="readonly" size="5" type="text"><br>
-		 Variance:<input id="graph-variance" name="graph_variance" readonly="readonly" size="5" type="text"><br>
-		Estimate Cost (P/Mo):<input id="graph-estimate-cost" name="graph_estimate_cost" readonly="readonly" size="5" type="text"><br>
-		Actual Cost (P/Mo):<input id="graph-actual-cost" name="graph_actual_cost" readonly="readonly" size="5" type="text"><br>
+			Max:<input id="graph-max" name="graph_max" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
+		    Min:<input id="graph-min" name="graph_min" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
+			Mean:<input id="graph-mean" name="graph_mean" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
+		    Deviation:<input id="graph-deviation" name="graph_deviation" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
+		    Variance:<input id="graph-variance" name="graph_variance" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
+		    Estimate Cost (P/Mo):<input id="graph-estimate-cost" name="graph_estimate_cost" readonly="readonly" size="5" dir="rtl" style="background-color: #B19CD9"><br>
+		    Actual Cost (P/Mo):<input id="graph-actual-cost" name="graph_actual_cost" readonly="readonly" size="5" dir="rtl" style="background-color: #ADD8E6"><br>
 		</strong>
 	</div>
-	
+		
 		<br>
 		<button type="button" id="save-button0" style="width: 125px"><strong>Save to File...</strong></button>
 		&nbsp;
@@ -119,7 +124,7 @@ Project Tracker</h1>
 <!-- Add a Point container that can be set to shown -->	
 <div id="running-div" class="relative-hidden" style="text-align: right; left: 1279px; top: -407px; width: 157px;">
 	<strong>Add a Point:<br></strong>
-	<input name="add_point" id="add-point-text" size="15" type="text"><br>
+	<input name="add_point" id="add-point-text" size="15" dir="rtl"><br>
 	<button type="submit" id="submit-add" style="width: 145px">Add a point...</button>
 </div>
 

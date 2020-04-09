@@ -20,7 +20,7 @@ function setup() {
 
 	// start drawing
 	background(240);
-	drawGraph();
+	drawVarianceGraph();
 }
 
 // p5 function: gets called every frame
@@ -32,7 +32,7 @@ function draw() {
 	// this will clear out the previously drawn image so that we dont
 	// keep drawing over the same image (looks funky)
 	background(240);
-	drawGraph();
+	drawVarianceGraph();
 }
 
 // function that will draw a dashed line from point (x1,y1) to (x2,y2)
@@ -87,7 +87,7 @@ function dashedLine(x1, y1, x2, y2, l, g) {
 }
 var counter = 0;
 // main function to draw the actual graph
-function drawGraph() {
+function drawVarianceGraph() {
 	// border
 	stroke(0);
 	strokeWeight(borderWidth);
@@ -125,8 +125,6 @@ function drawGraph() {
 	var max = chart.max;
 	var minTime = chart.minTime;
 	var maxTime = chart.maxTime;
-	var estimateCost = chart.estimateCost;
-	var actualCost = chart.actualCost;
 
 	// come up with optimal bounds for y-axis
 	var yMin = 0;
@@ -285,3 +283,77 @@ function drawGraph() {
 	rotate(PI/2);
 	translate(0, 0);
 }
+
+/*
+function drawBudgetGraph(){
+	//draw lines first, reason listed above in drawVarianceGraph()
+	/*	lastEstPoint = null;
+	for(var i = 0; i < chart.numberOfEstPoints; i++) {
+		var x = map(chart.estPoints[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
+		var y = map(chart.estPoints[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
+
+		// draw line between points
+		if(lastEstPoint == null) {
+			lastEstPoint = [x,y];
+		}
+		else {
+			strokeWeight(tickWidth);
+			stroke(0, 255, 0);
+			line(lastEstPoint[0], lastEstPoint[1], x, y);
+			stroke(0);
+			lastEstPoint = [x,y];
+			stroke(0);
+		}
+	}
+	*/
+	
+	//plot estimate points
+	/*
+	for(var i = 0; i < budgetChart.numberOfEstPoints; i++) {
+		// tick mark and label on x axis
+		var xPos = map(budgetChart.estPoints[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
+		if(budgetChart.numberOfEstPoints > 200) {
+			strokeWeight(tickWidth / 2);
+		}
+		else {
+			strokeWeight(tickWidth);
+		}
+		stroke(0, 255, 0);
+		line(xPos, height - innerGraphBuffer + tickLength / 2, xPos, height - innerGraphBuffer - tickLength / 2);
+		stroke(0);
+		strokeWeight(0);
+		if(budgetChart.numberOfEstPoints > 40){
+			textSize(8);
+		}
+		else {
+			textSize(12);
+		}
+
+		// scale the label text so that we avoid overlapping text
+		// highest level of scaling works well with data sets less than 500 points
+		if(budgetChart.numberOfEstPoints < 75) {
+			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		}
+		else if(budgetChart.numberOfEstPoints > 75 && budgetChart.numberOfEstPoints <= 105 && budgetChart.estPoints[i].x%2==1) {
+			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		}
+		else if(budgetChart.numberOfEstPoints > 105 && budgetChart.numberOfEstPoints <= 145 && budgetChart.estPoints[i].x%3==0) {
+			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		}
+		else if(budgetChart.numberOfEstPoints > 145 && budgetChart.numberOfEstPoints <= 200 && budgetChart.estPoints[i].x%5==0) {
+			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		}
+		else if(budgetChart.numberOfEstPoints > 200 && budgetChart.estPoints[i].x%10==0) {
+			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		}
+
+		// plot point
+		var x = xPos;
+		var y = map(budgetChart.estPoints[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
+		
+		strokeWeight(dotSize);
+		ellipse(x, y, dotSize, dotSize);
+		stroke(0);
+	}
+}
+	*/

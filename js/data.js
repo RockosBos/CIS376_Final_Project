@@ -11,12 +11,12 @@ Course: CIS 375.001, Software Engineering
 
 */
 
-var langType = 0;
-
 // chart class definition
 function Chart(metric=0, time=0, programLang=0) {
 	this.numberOfPoints = 0;
+	this.numberOfEstPoints = 0;
 	this.points = [];
+	this.estPoints = [];
 	this.metricType = metric;
 	this.timeType = time;
 	this.langType = programLang;
@@ -34,6 +34,7 @@ function Chart(metric=0, time=0, programLang=0) {
 
 Chart.prototype.update = function () {
 	this.numberOfPoints = this.points.length;
+	this.numberOfEstPoints = this.estPoints.length;
 	this.mean = calcMetricMean(this.points);
 	this.median = calcMetricMed(this.points);
 	this.max = calcMetricMax(this.points);
@@ -42,8 +43,8 @@ Chart.prototype.update = function () {
 	this.minTime = calcTimeMin(this.points);
 	this.variance = calcMetricVar(this.points);
 	this.stdDeviation = calcMetricStdDev(this.points);
-	this.estCost = 0;
-	this.actCost = 0;
+	this.estimateCost = 0;
+	this.actualCost = 0;
 	needsToUpdate = true;
 }
 
@@ -63,9 +64,21 @@ Chart.prototype.addPoint = function(point) {
 	this.update();
 }
 
-/*Chart.prototype.addEstimatePoint = function(estimatePoint) {
-	if(!
-} */
+Chart.prototype.addEstPoint = function(point) {
+	if(!(point instanceof EstPoint))
+		return;
+	this.estPoints.push(point);
+	// for some reason at this point it seems like the points get put into random positions in the array??
+	// so we have to sort it using a helper function
+	this.estPoints.sort(function(a,b) {
+		if(a.x > b.x)
+			return 1;
+		if(a.x < b.x)
+			return -1;
+		return 0;
+	});
+	this.update();
+} 
 
 Chart.prototype.getMetric = function() {
 	if(this.metricType === 0) {
@@ -99,5 +112,19 @@ Point.prototype.setValue = function (val) {
 }
 
 Point.prototype.setTime = function(time) {
+	this.x = time;
+}
+
+//estPoint class definition
+function EstPoint(time=0,val=0) {
+	this.x = time;
+	this.y = val;
+}
+
+EstPoint.prototype.setValue = function (val) {
+	this.y = val;
+}
+
+EstPoint.prototype.setTime = function(time) {
 	this.x = time;
 }

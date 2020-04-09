@@ -24,6 +24,7 @@ var dotSize = 4;
 
 // chart object
 var chart = new Chart();
+var budgetChart = new Chart()
 var needsToUpdate = false;
 
 // references to HTML elements
@@ -46,6 +47,7 @@ var deviation = document.getElementById("graph-deviation");
 var variance = document.getElementById("graph-variance");
 var estimateCost = document.getElementById("graph-estimate-cost");
 var actualCost = document.getElementById("graph-actual-cost");
+var estimateText = document.getElementById("estimate-progress-text");
 
 // test functions
 function addRandom() {
@@ -106,7 +108,7 @@ saveButton.addEventListener("click", function() {
 	if(!(chart !== null && chart instanceof Chart))
 		return;
 	var stringData = JSON.stringify(chart);
-	download(stringData, "ccaspc_data.chart", 'text/plain');
+	download(stringData, "ProjectTracker.chart", 'text/plain');
 });
 
 // Load Button event listener
@@ -120,6 +122,8 @@ addInitialButton.addEventListener("click", function() {
 		y = secondPointTextbox.value,
 		z = thirdPointTextbox.value;
 
+	var a = estimateText.value;
+
 	if(x.length === 0 || y.length === 0 || z.length === 0)
 		return;
 
@@ -127,14 +131,20 @@ addInitialButton.addEventListener("click", function() {
 		return;
 
 	chart.addPoint(new Point(1, parseFloat(x)));
+	//budgetChart.addEstPoint(new EstPoint(1, parseFloat(a)));
 	chart.addPoint(new Point(2, parseFloat(y)));
+	//budgetChart.addEstPoint(new EstPoint(2, parseFloat(2 * a)));
 	chart.addPoint(new Point(3, parseFloat(z)));
+	//budgetChart.addEstPoint(new EstPoint(3, parseFloat(3 * a)));
+	document.getElementById("estimate-progress-text").readOnly = 'readOnly';
+	document.getElementById("estimate-progress-text").style = 'background-color: #DCDCDC'
 	update();
 });
 
 // Add additional points
 addButton.addEventListener("click", function() {
 	var x = addPointTextBox.value;
+	var y = estimateText.value;
 
 	if(x.length === 0)
 		return;
@@ -143,6 +153,7 @@ addButton.addEventListener("click", function() {
 		return;
 
 	chart.addPoint(new Point(chart.numberOfPoints + 1, parseFloat(x)));
+	//budgetChart.addEstPoint(new EstPoint(budgetChart.numberOfEstPoints + 1, parseFloat(y * (budgetChart.numberOfEstPoints + 1))));
 	update();
 });
 
@@ -231,8 +242,8 @@ function updateLabels() {
 	mean.value = chart.mean.toFixed(3);
 	deviation.value = chart.stdDeviation.toFixed(3);
 	variance.value = chart.variance.toFixed(3);
-	estimateCost.value = chart.estCost.toFixed(3);
-	actualCost.value = chart.actCost.toFixed(3);
+	estimateCost.value = budgetChart.estCost.toFixed(3);
+	actualCost.value = budgetChart.actCost.toFixed(3);
 }
 
 // bring all these update functions into one for easier editing later on
