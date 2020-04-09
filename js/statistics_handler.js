@@ -178,3 +178,6 @@ function calcActualCost(data){
     sum += data[i].y;
   }
 }
+function calcCostDeviation(estimateData, ActualData){
+    //this will track the difference between Actual and goal data and output how they relate
+}
