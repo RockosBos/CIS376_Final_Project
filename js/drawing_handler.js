@@ -20,7 +20,7 @@ function setup() {
 
 	// start drawing
 	background(240);
-	drawVarianceGraph();
+	drawGraph();
 }
 
 // p5 function: gets called every frame
@@ -32,7 +32,7 @@ function draw() {
 	// this will clear out the previously drawn image so that we dont
 	// keep drawing over the same image (looks funky)
 	background(240);
-	drawVarianceGraph();
+	drawGraph();
 }
 
 // function that will draw a dashed line from point (x1,y1) to (x2,y2)
@@ -87,23 +87,28 @@ function dashedLine(x1, y1, x2, y2, l, g) {
 }
 var counter = 0;
 // main function to draw the actual graph
-function drawVarianceGraph() {
+function drawGraph() {
 	// border
 	stroke(0);
 	strokeWeight(borderWidth);
 	borderAdjustment = borderWidth / 2;
+	estimateGraphOrigin = width - 300;
 
-	line(0, borderAdjustment - 1, width, borderAdjustment - 1);
-	line(0, height - borderAdjustment, width, height - borderAdjustment);
-	line(borderAdjustment - 1, 0, borderAdjustment - 1, height);
-	line(width - borderAdjustment, 0, width - borderAdjustment, height);
+	line(borderAdjustment, borderAdjustment, (estimateGraphOrigin - borderAdjustment), borderAdjustment); //top
+	line(borderAdjustment, borderAdjustment, borderAdjustment, height - borderAdjustment);		 //left
+	line(borderAdjustment, height - borderAdjustment, estimateGraphOrigin, height - borderAdjustment);    //bottom
+
+	line(estimateGraphOrigin, borderAdjustment, width, borderAdjustment);                   //top
+	line(estimateGraphOrigin, borderAdjustment, estimateGraphOrigin, height);               //left
+	line(estimateGraphOrigin, height - borderAdjustment, width, height - borderAdjustment); //bottom
+	line(width - borderAdjustment, borderAdjustment, width - borderAdjustment, height);     //right
 
 	// check if we have valid data, if we don't the program will hang
 	if(chart.numberOfPoints < 3) {
 		stroke(0);
 		strokeWeight(0);
 		textAlign(CENTER, CENTER);
-		text('Please enter at least 3 points of data.', width / 2, height / 2);
+		text('Please enter at least 3 points of data.', estimateGraphOrigin / 2, height / 2);
 		document.getElementById("initial-div").className = "relative-shown";
 		document.getElementById("running-div").className = "relative-hidden";
 		return;
@@ -112,11 +117,19 @@ function drawVarianceGraph() {
 	document.getElementById("initial-div").className = "relative-hidden";
 	document.getElementById("running-div").className = "relative-shown";
 
-	// inner graph border
-	line(innerGraphBuffer, innerGraphBuffer, width - innerGraphBuffer / 2, innerGraphBuffer);
-	line(innerGraphBuffer, height - innerGraphBuffer, width - innerGraphBuffer / 2, height - innerGraphBuffer);
+	// variance inner graph border
+	line(innerGraphBuffer, innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2, innerGraphBuffer);
+	line(innerGraphBuffer, height - innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2, height - innerGraphBuffer);
 	line(innerGraphBuffer - 1, innerGraphBuffer, innerGraphBuffer - 1, height - innerGraphBuffer);
-	line(width - innerGraphBuffer / 2, innerGraphBuffer, width - innerGraphBuffer / 2, height - innerGraphBuffer);
+	line(estimateGraphOrigin - innerGraphBuffer / 2, innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2, height - innerGraphBuffer);
+
+	estimateBuffer = innerGraphBuffer / 2;
+
+	// estimate inner graph border
+	line(estimateGraphOrigin + estimateBuffer, estimateBuffer, width - estimateBuffer, estimateBuffer);
+	line(innerGraphBuffer, height - innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2, height - innerGraphBuffer);
+	//line(innerGraphBuffer - 1, innerGraphBuffer, innerGraphBuffer - 1, height - innerGraphBuffer);
+	//line((width - 300) - innerGraphBuffer / 2, innerGraphBuffer, (width - 300) - innerGraphBuffer / 2, height - innerGraphBuffer);
 
 	// set up some chart data
 	var avg = chart.mean;
@@ -159,7 +172,7 @@ function drawVarianceGraph() {
 	// mean tick
 	var yPos = map(avg, yMin, yMax, height - innerGraphBuffer, innerGraphBuffer);
 	strokeWeight(tickWidth);
-	line(innerGraphBuffer - tickLength / 2, yPos, width - innerGraphBuffer / 2, yPos);
+	line(innerGraphBuffer - tickLength / 2, yPos, (width - 300) - innerGraphBuffer / 2, yPos);
 	strokeWeight(0);
 	text(avg.toFixed(1), innerGraphBuffer - tickLength, yPos);
 
@@ -170,7 +183,7 @@ function drawVarianceGraph() {
 		strokeWeight(tickWidth);
 		line(innerGraphBuffer - tickLength / 2, yPos, innerGraphBuffer + tickLength / 2, yPos);
 		strokeWeight(tickWidth / 2);
-		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, width - innerGraphBuffer / 2, yPos, 5, 5);
+		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, (width - 300) - innerGraphBuffer / 2, yPos, 5, 5);
 		strokeWeight(0);
 		text((avg + 3*s).toFixed(1), innerGraphBuffer - tickLength, yPos);
 
@@ -179,7 +192,7 @@ function drawVarianceGraph() {
 		strokeWeight(tickWidth);
 		line(innerGraphBuffer - tickLength / 2, yPos, innerGraphBuffer + tickLength / 2, yPos);
 		strokeWeight(tickWidth / 2);
-		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, width - innerGraphBuffer / 2, yPos, 5, 5);
+		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, (width - 300) - innerGraphBuffer / 2, yPos, 5, 5);
 		strokeWeight(0);
 		text((avg - 3*s).toFixed(1), innerGraphBuffer - tickLength, yPos);
 	}
@@ -202,7 +215,7 @@ function drawVarianceGraph() {
 	// which will not look correct
 	lastPoint = null;
 	for(var i = 0; i < chart.numberOfPoints; i++) {
-		var x = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
+		var x = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, (width - 300) - innerGraphBuffer / 2);
 		var y = map(chart.points[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
 
 		// draw line between points
@@ -216,11 +229,31 @@ function drawVarianceGraph() {
 		}
 	}
 
+	lastPoint = null;
+	for(var i = 0; i < chart.numberOfEstPoints; i++) {
+	var x = map(chart.estPoints[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
+	var y = map(chart.estPoints[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
+
+	// draw line between estimate points
+	if(lastPoint == null) {
+		lastPoint = [x,y];
+	}
+	else {
+		strokeWeight(tickWidth);
+		stroke(0, 255, 0);
+		line(lastPoint[0], lastPoint[1], x, y);
+		stroke(0);
+		lastPoint = [x,y];
+		stroke(0);
+	}
+}
+	
+
 	textAlign(CENTER, CENTER);
 	// plot points
 	for(var i = 0; i < chart.numberOfPoints; i++) {
 		// tick mark and label on x axis
-		var xPos = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
+		var xPos = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, (width - 300) - innerGraphBuffer / 2);
 		if(chart.numberOfPoints > 200) {
 			strokeWeight(tickWidth / 2);
 		}
@@ -275,8 +308,8 @@ function drawVarianceGraph() {
 	textSize(12);
 	textAlign(CENTER, CENTER);
 	strokeWeight(0);
-	text('Project Tracker', width / 2, 25);
-	text('Time Value: (' + chart.getTime() + ')', width / 2, height - 25);
+	text('Project Tracker Variance', (width - 300) / 2, 25);
+	text('Time Value: (' + chart.getTime() + ')', (width - 300) / 2, height - 25);
 	translate(width / 2, height / 2);
 	rotate(-PI/2);
 	text('Metric Value: (' + chart.getMetric() + ')', 0, -(width / 2) + 15);
