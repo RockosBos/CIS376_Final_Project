@@ -23,6 +23,7 @@ function Chart(metric=0, time=0, programLang=0) {
 	this.mean = 0;
 	this.median = 0;
 	this.max = 0;
+	this.estMax = 0;
 	this.min = 0;
 	this.minTime = 0;
 	this.maxTime = 0;
@@ -38,6 +39,8 @@ Chart.prototype.update = function () {
 	this.mean = calcMetricMean(this.points);
 	this.median = calcMetricMed(this.points);
 	this.max = calcMetricMax(this.points);
+	this.estMax = calcEstimateMetricMax(this.points, this.estPoints);
+	this.pointTotal = calcPointTotal(this.points);
 	this.min = calcMetricMin(this.points);
 	this.maxTime = calcTimeMax(this.points);
 	this.minTime = calcTimeMin(this.points);
@@ -68,9 +71,21 @@ Chart.prototype.addEstPoint = function(point) {
 	if(!(point instanceof EstPoint))
 		return;
 	this.estPoints.push(point);
-	// for some reason at this point it seems like the points get put into random positions in the array??
-	// so we have to sort it using a helper function
 	this.estPoints.sort(function(a,b) {
+		if(a.x > b.x)
+			return 1;
+		if(a.x < b.x)
+			return -1;
+		return 0;
+	});
+	this.update();
+} 
+
+Chart.prototype.addActPoint = function(point) {
+	if(!(point instanceof ActPoint))
+		return;
+	this.actPoints.push(point);
+	this.actPoints.sort(function(a,b) {
 		if(a.x > b.x)
 			return 1;
 		if(a.x < b.x)
@@ -116,7 +131,7 @@ Point.prototype.setTime = function(time) {
 }
 
 //estPoint class definition
-function EstPoint(time=0,val=0) {
+function EstPoint(time=0,val=0){
 	this.x = time;
 	this.y = val;
 }

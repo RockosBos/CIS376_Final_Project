@@ -74,7 +74,7 @@ function calcTimeMin(data){
 }
 
 function calcTimeMax(data){
-   var m = data[0].x;
+  var m = data[0].x;
   var i;
   for ( i = 0; i < data.length; i++ ){
     if (data[i].x > m){
@@ -104,6 +104,23 @@ function calcMetricMax(data){
     }
   }
   return m;
+}
+
+function calcEstimateMetricMax(data1, data2){
+     m = 0;
+     n = 0;
+     for (var i = 0; i < data1.length; i++){
+          m += data1[i].y;
+	}
+     for (var i = 0; i < data2.length; i++){
+          n = data2[i].y;
+	}
+     if (m >= n){
+          return m;
+     }
+     else if (n > m){
+          return n;
+     }
 }
 
 function calcTimeStdDev(data) {
@@ -178,6 +195,15 @@ function calcActualCost(data){
     sum += data[i].y;
   }
 }
+
 function calcCostDeviation(estimateData, ActualData){
     //this will track the difference between Actual and goal data and output how they relate
+}
+
+function calcPointTotal(data){
+     var m = 0;
+     for (var i = 0; i < data.length; i++)
+          m += data[i].y;
+     return m;
+     
 }

@@ -29,6 +29,7 @@ function draw() {
 	if(needsToUpdate === null || needsToUpdate === false)
 		return;
 	needsToUpdate = false;
+
 	// this will clear out the previously drawn image so that we dont
 	// keep drawing over the same image (looks funky)
 	background(240);
@@ -86,19 +87,20 @@ function dashedLine(x1, y1, x2, y2, l, g) {
     }
 }
 var counter = 0;
+
 // main function to draw the actual graph
 function drawGraph() {
-	// border
+	// border for entire graph
 	stroke(0);
 	strokeWeight(borderWidth);
 	borderAdjustment = borderWidth / 2;
-	estimateGraphOrigin = width - 300;
+	estimateGraphOrigin = width - 600;
 
-	line(borderAdjustment, borderAdjustment, (estimateGraphOrigin - borderAdjustment), borderAdjustment); //top
-	line(borderAdjustment, borderAdjustment, borderAdjustment, height - borderAdjustment);		 //left
+	line(borderAdjustment, borderAdjustment, (estimateGraphOrigin - borderAdjustment), borderAdjustment); //left top buffer line
+	line(borderAdjustment, borderAdjustment, borderAdjustment, height - borderAdjustment);		       //left
 	line(borderAdjustment, height - borderAdjustment, estimateGraphOrigin, height - borderAdjustment);    //bottom
 
-	line(estimateGraphOrigin, borderAdjustment, width, borderAdjustment);                   //top
+	line(estimateGraphOrigin, borderAdjustment, width, borderAdjustment);                   //right top buffer line
 	line(estimateGraphOrigin, borderAdjustment, estimateGraphOrigin, height);               //left
 	line(estimateGraphOrigin, height - borderAdjustment, width, height - borderAdjustment); //bottom
 	line(width - borderAdjustment, borderAdjustment, width - borderAdjustment, height);     //right
@@ -127,22 +129,26 @@ function drawGraph() {
 
 	// estimate inner graph border
 	line(estimateGraphOrigin + estimateBuffer, estimateBuffer, width - estimateBuffer, estimateBuffer);
-	line(innerGraphBuffer, height - innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2, height - innerGraphBuffer);
-	//line(innerGraphBuffer - 1, innerGraphBuffer, innerGraphBuffer - 1, height - innerGraphBuffer);
-	//line((width - 300) - innerGraphBuffer / 2, innerGraphBuffer, (width - 300) - innerGraphBuffer / 2, height - innerGraphBuffer);
+	line(estimateGraphOrigin + estimateBuffer, estimateBuffer, estimateGraphOrigin + estimateBuffer, height - estimateBuffer);
+	line(estimateGraphOrigin + estimateBuffer, height - estimateBuffer, width - estimateBuffer, height - estimateBuffer);
+	line(width - estimateBuffer, estimateBuffer, width - estimateBuffer, height - estimateBuffer);
 
 	// set up some chart data
 	var avg = chart.mean;
 	var s = chart.stdDeviation;
 	var min = chart.min;
 	var max = chart.max;
+	var estMax = chart.estMax;
+	var estYMax = 0;
 	var minTime = chart.minTime;
 	var maxTime = chart.maxTime;
 
 	// come up with optimal bounds for y-axis
 	var yMin = 0;
 	var yMax = 0;
+	var estYMin = 0;
 
+	//Left graph std deviations as limits
 	if(s !== 0) {
 		// upper bound
 		if(max > avg + 3*s) {
@@ -166,13 +172,36 @@ function drawGraph() {
 		yMax = avg + avg / 10;
 	}
 
+	//Right graph determination of max, keeps in mind FP aspect.
+	if (estMax <= 10){
+		estYMax = 10;
+	}
+	else if (estMax > 10 && estMax <= 50){
+		estYMax = 50;
+	}
+	else if (estMax > 50 && estMax <= 100){
+		estYMax = 100;
+	}
+	else if (estMax > 100 && estMax <= 250){
+		estYMax = 250;
+	}
+	else if (estMax > 250 && estMax <= 500){
+		estYMax = 500;
+	}
+	else if (estMax > 500 && estMax <= 1000){
+		estYMax = 1000;
+	}
+	else{
+		estYMax = 10000;
+	}
 
 	textAlign(RIGHT,CENTER);
+
 	// y axis ticks with labels (label mean, UCL, LCL)
 	// mean tick
 	var yPos = map(avg, yMin, yMax, height - innerGraphBuffer, innerGraphBuffer);
 	strokeWeight(tickWidth);
-	line(innerGraphBuffer - tickLength / 2, yPos, (width - 300) - innerGraphBuffer / 2, yPos);
+	line(innerGraphBuffer - tickLength / 2, yPos, estimateGraphOrigin - innerGraphBuffer / 2, yPos);
 	strokeWeight(0);
 	text(avg.toFixed(1), innerGraphBuffer - tickLength, yPos);
 
@@ -183,7 +212,7 @@ function drawGraph() {
 		strokeWeight(tickWidth);
 		line(innerGraphBuffer - tickLength / 2, yPos, innerGraphBuffer + tickLength / 2, yPos);
 		strokeWeight(tickWidth / 2);
-		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, (width - 300) - innerGraphBuffer / 2, yPos, 5, 5);
+		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, estimateGraphOrigin - innerGraphBuffer / 2, yPos, 5, 5);
 		strokeWeight(0);
 		text((avg + 3*s).toFixed(1), innerGraphBuffer - tickLength, yPos);
 
@@ -192,10 +221,64 @@ function drawGraph() {
 		strokeWeight(tickWidth);
 		line(innerGraphBuffer - tickLength / 2, yPos, innerGraphBuffer + tickLength / 2, yPos);
 		strokeWeight(tickWidth / 2);
-		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, (width - 300) - innerGraphBuffer / 2, yPos, 5, 5);
+		dashedLine(innerGraphBuffer + tickLength / 2 + 5, yPos, estimateGraphOrigin - innerGraphBuffer / 2, yPos, 5, 5);
 		strokeWeight(0);
 		text((avg - 3*s).toFixed(1), innerGraphBuffer - tickLength, yPos);
 	}
+
+	textSize(12);
+	for (var i = 1; i < estYMax; i++){
+		strokeWeight(tickWidth);
+		if (estYMax == 10 && i % 1 == 0){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text(i, estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+		else if (estYMax > 10 && estYMax == 50 && i % 5 == 0){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text(i, estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+		else if (estYMax > 50 && estYMax == 100 && i % 10 == 0){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text(i, estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+		else if (estYMax > 100 && estYMax == 250 && i % 25 == 0){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text(i, estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+		else if (estYMax > 250 && estYMax == 500 && i % 50 == 0){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text(i, estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+		else if (estYMax > 500 && estYMax == 1000 && i % 100 == 0){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text(i, estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+		else if (estYMax > 1000 && estYMax == 10000 && i % 1000 == 0){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text((i / 1000) + 'K', estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+		else if (estYMax > 10000){
+			var estYPos = map(i, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+			line(estimateGraphOrigin + estimateBuffer + tickLength / 5, estYPos, estimateGraphOrigin + estimateBuffer - tickLength / 5, estYPos);
+			strokeWeight(0);
+			text((i / 1000) + 'K', estimateGraphOrigin + estimateBuffer - tickLength, estYPos);
+		}
+	}
+	strokeWeight(tickWidth);
 
 	// get bounds for x axis
 	var xMin = 0;
@@ -215,7 +298,7 @@ function drawGraph() {
 	// which will not look correct
 	lastPoint = null;
 	for(var i = 0; i < chart.numberOfPoints; i++) {
-		var x = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, (width - 300) - innerGraphBuffer / 2);
+		var x = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2);
 		var y = map(chart.points[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
 
 		// draw line between points
@@ -229,31 +312,58 @@ function drawGraph() {
 		}
 	}
 
+	//draw lines between estimate points
 	lastPoint = null;
 	for(var i = 0; i < chart.numberOfEstPoints; i++) {
-	var x = map(chart.estPoints[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
-	var y = map(chart.estPoints[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
+		var x = map(chart.estPoints[i].x, xMin, xMax, estimateGraphOrigin + estimateBuffer, width - estimateBuffer);
+		var y = map(chart.estPoints[i].y, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
 
-	// draw line between estimate points
-	if(lastPoint == null) {
-		lastPoint = [x,y];
+		// draw line between estimate points
+		if(lastPoint == null) {
+			lastPoint = [x,y];
+		}
+		else {
+			strokeWeight(tickWidth);
+			stroke('#B19CD9');
+			line(lastPoint[0], lastPoint[1], x, y);
+			stroke(0);
+			lastPoint = [x,y];
+			stroke(0);
+		}
 	}
-	else {
-		strokeWeight(tickWidth);
-		stroke(0, 255, 0);
-		line(lastPoint[0], lastPoint[1], x, y);
-		stroke(0);
-		lastPoint = [x,y];
-		stroke(0);
+
+	//draw lines between actual points
+	lastPoint = null;
+	for(var i = 0, total = 0; i < chart.numberOfPoints; i++){
+		total += chart.points[i].y;
+		var x = map(chart.points[i].x, xMin, xMax, estimateGraphOrigin + estimateBuffer, width - estimateBuffer);
+		var y = map(total, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+
+
+		// draw line between actual
+		if(lastPoint == null) {
+			lastPoint = [x,y];
+		}
+		else {
+			strokeWeight(tickWidth);
+			stroke('#ADD8E6');
+			line(lastPoint[0], lastPoint[1], x, y);
+			stroke(0);
+			lastPoint = [x,y];
+			stroke(0);
+		}
 	}
-}
-	
 
 	textAlign(CENTER, CENTER);
+
 	// plot points
-	for(var i = 0; i < chart.numberOfPoints; i++) {
+	for(var i = 0, total = 0; i < chart.numberOfPoints; i++) {
 		// tick mark and label on x axis
-		var xPos = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, (width - 300) - innerGraphBuffer / 2);
+		var xPos = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2);
+		var estXPos = map(chart.estPoints[i].x, xMin, xMax, estimateGraphOrigin + estimateBuffer, width - estimateBuffer);
+		var textSizeTemp;
+
+		total += chart.points[i].y;
 		if(chart.numberOfPoints > 200) {
 			strokeWeight(tickWidth / 2);
 		}
@@ -261,38 +371,52 @@ function drawGraph() {
 			strokeWeight(tickWidth);
 		}
 		line(xPos, height - innerGraphBuffer + tickLength / 2, xPos, height - innerGraphBuffer - tickLength / 2);
+		line(estXPos, height - estimateBuffer + tickLength / 5, estXPos, height - estimateBuffer - tickLength / 5);
 		strokeWeight(0);
-		if(chart.numberOfPoints > 40){
-			textSize(8);
+		if(chart.numberOfPoints > 30){
+			textSizeTemp = 9;
 		}
 		else {
-			textSize(12);
+			textSizeTemp = 12;
 		}
 
 		// scale the label text so that we avoid overlapping text
 		// highest level of scaling works well with data sets less than 500 points
-		if(chart.numberOfPoints < 75) {
-			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		if(chart.numberOfPoints <= 40) {
+			textSize(textSizeTemp);
+			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2);
+			text(chart.points[i].x, estXPos, height - estimateBuffer + tickLength + 2);
+			
 		}
-		else if(chart.numberOfPoints > 75 && chart.numberOfPoints <= 105 && chart.points[i].x%2==1) {
-			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		else if(chart.numberOfPoints > 40 && chart.numberOfPoints <= 75 && chart.points[i].x%2==1) {
+			textSize(textSizeTemp);
+			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2);
+			text(chart.points[i].x, estXPos, height - estimateBuffer + tickLength + 2);
 		}
-		else if(chart.numberOfPoints > 105 && chart.numberOfPoints <= 145 && chart.points[i].x%3==0) {
-			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		else if(chart.numberOfPoints > 75 && chart.numberOfPoints <= 100 && chart.points[i].x%3==0) {
+			textSize(textSizeTemp);
+			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2);
+			text(chart.points[i].x, estXPos, height - estimateBuffer + tickLength + 2);
 		}
-		else if(chart.numberOfPoints > 145 && chart.numberOfPoints <= 200 && chart.points[i].x%5==0) {
-			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		else if(chart.numberOfPoints > 100 && chart.numberOfPoints <= 150 && chart.points[i].x%5==0) {
+			textSize(textSizeTemp);
+			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2);
+			text(chart.points[i].x, estXPos, height - estimateBuffer + tickLength + 2);
 		}
-		else if(chart.numberOfPoints > 200 && chart.points[i].x%10==0) {
-			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
+		else if(chart.numberOfPoints > 150 && chart.points[i].x%10==0) {
+			textSize(textSizeTemp);
+			text(chart.points[i].x, xPos, height - innerGraphBuffer + tickLength + 2);
+			text(chart.points[i].x, estXPos, height - estimateBuffer + tickLength + 2);
 		}
 
 		// plot point
 		var x = xPos;
 		var y = map(chart.points[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
+		var x1 = estXPos;
+		var y1 = map(chart.estPoints[i].y, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
+		var y2 = map(total, estYMin, estYMax, height - estimateBuffer, estimateBuffer);
 		
 		stroke(0);
-
 		if((chart.points[i].y >= avg + 3 * s || chart.points[i].y <= avg - 3 * s) && s !== 0) { 
 			stroke(255, 0, 0);
 		}
@@ -301,6 +425,10 @@ function drawGraph() {
 		}
 		strokeWeight(dotSize);
 		ellipse(x, y, dotSize, dotSize);
+		stroke('#B19CD9');
+		ellipse(x1, y1, dotSize, dotSize);
+		stroke('#ADD8E6');
+		ellipse(x1, y2, dotSize, dotSize);
 		stroke(0);
 	}
 

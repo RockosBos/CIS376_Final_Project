@@ -24,7 +24,6 @@ var dotSize = 4;
 
 // chart object
 var chart = new Chart();
-var budgetChart = new Chart()
 var needsToUpdate = false;
 
 // references to HTML elements
@@ -118,7 +117,7 @@ loadButton.addEventListener("click", function() {
 
 // Add initial 3 points
 addInitialButton.addEventListener("click", function() {
-	var x = firstPointTextbox.value,
+	 var x = firstPointTextbox.value,
 		y = secondPointTextbox.value,
 		z = thirdPointTextbox.value;
 
@@ -131,13 +130,13 @@ addInitialButton.addEventListener("click", function() {
 		return;
 
 	chart.addPoint(new Point(1, parseFloat(x)));
-	//budgetChart.addEstPoint(new EstPoint(1, parseFloat(a)));
+	chart.addEstPoint(new EstPoint(1, parseFloat(a)));
 	chart.addPoint(new Point(2, parseFloat(y)));
-	//budgetChart.addEstPoint(new EstPoint(2, parseFloat(2 * a)));
+	chart.addEstPoint(new EstPoint(2, parseFloat(2 * a)));
 	chart.addPoint(new Point(3, parseFloat(z)));
-	//budgetChart.addEstPoint(new EstPoint(3, parseFloat(3 * a)));
+	chart.addEstPoint(new EstPoint(3, parseFloat(3 * a)));
 	document.getElementById("estimate-progress-text").readOnly = 'readOnly';
-	document.getElementById("estimate-progress-text").style = 'background-color: #DCDCDC'
+	document.getElementById("estimate-progress-text").style = 'background-color: #DCDCDC';
 	update();
 });
 
@@ -146,14 +145,14 @@ addButton.addEventListener("click", function() {
 	var x = addPointTextBox.value;
 	var y = estimateText.value;
 
-	if(x.length === 0)
+	if(x.length == 0)
 		return;
 
-	if(x === null || isNaN(x) || chart === null)
+	if(x == null || isNaN(x) || chart === null)
 		return;
 
 	chart.addPoint(new Point(chart.numberOfPoints + 1, parseFloat(x)));
-	//budgetChart.addEstPoint(new EstPoint(budgetChart.numberOfEstPoints + 1, parseFloat(y * (budgetChart.numberOfEstPoints + 1))));
+	chart.addEstPoint(new EstPoint(chart.numberOfEstPoints + 1, parseFloat(y * (chart.numberOfEstPoints + 1))));
 	update();
 });
 
@@ -232,8 +231,9 @@ function updateDropdowns() {
 	else if (chart.langType === 4){
 		progLangDropdown.value = "HTML"
 	}
-	else
+	else{
 		progLangDropdown.value = "visualBasic"
+	}
 }
 
 function updateLabels() {
@@ -242,8 +242,8 @@ function updateLabels() {
 	mean.value = chart.mean.toFixed(3);
 	deviation.value = chart.stdDeviation.toFixed(3);
 	variance.value = chart.variance.toFixed(3);
-	estimateCost.value = budgetChart.estCost.toFixed(3);
-	actualCost.value = budgetChart.actCost.toFixed(3);
+	estimateCost.value = chart.estCost.toFixed(3);
+	actualCost.value = chart.actCost.toFixed(3);
 }
 
 // bring all these update functions into one for easier editing later on
