@@ -8,6 +8,7 @@ author: Christopher Ciolek
 Professor: Bruce Maxim
 Course: CIS 375.001, Software Engineering
 
+COCOMO FP to LOC calue determined via https://www.qsm.com/resources/function-point-languages-table using averages for languages
 */
 
 // Each funtion uses three points of decimal accuracy except for the median function
@@ -181,29 +182,91 @@ function calcMetricMed(data){
     return ((data[half-1].y + data[half].y) / 2.0);
 }
 
-function calcEstimateCost(data){
-   var i, estimateCost, length = data.length; sum = 0;
-  for (i = 0; i < data.length; i++) {
-    sum += data[i].y;
-  }
-  loc = sum;
+function calcEstimateCOCOMO(data){
+     var fpToKloc = 0, kloc = 0, temp = 0;
 
-}
-function calcActualCost(data){
-  var i, actualCost, length = data.length; sum = 0;
-  for (i = 0; i < data.length; i++) {
-    sum += data[i].y;
-  }
-}
-
-function calcCostDeviation(estimateData, ActualData){
-    //this will track the difference between Actual and goal data and output how they relate
-}
-
-function calcPointTotal(data){
-     var m = 0;
-     for (var i = 0; i < data.length; i++)
-          m += data[i].y;
-     return m;
+     if (chart.metricType == 1){
+          for (var i = 0; i < data.length; i++){
+               if (i == data.length - 1){
+                   temp = data[i].y;
+                   fpToKloc = convertFPtoKLOC(temp);
+                   kloc = fpToKloc;
+               }
+          }
+	}
+     else{
+          for (var i = 0; i < data.length; i++){
+               if (i == data.length - 1)
+                   kloc = data[i].y;
+          }
+          kloc /= 1000; 
+	}
+     if (chart.COCOMOType == 0){
+          temp = Math.pow(kloc, organicB);
+          return organicA * temp;
+     }
+     else if (chart.COCOMOType == 1){
+          temp = Math.pow(kloc, semiDetachedB);
+          return semiDetachedA * temp;
+	}
+     else{
+          temp = Math.pow(kloc, embeddedB);
+          return embeddedA * temp;
+	}
      
+}
+
+function calcActualCOCOMO(data){
+     var fpToKloc = 0, kloc = 0, temp = 0;
+
+     if(chart.metricType == 1){
+          temp = sumPoints(data);
+          fpToKloc = convertFPtoKLOC(temp);
+          kloc = fpToKloc;
+	}
+     else{
+          kloc = sumPoints(data);
+          kloc /= 1000;
+	}
+     if (chart.COCOMOType == 0){
+          temp = Math.pow(kloc, organicB);
+          return organicA * temp;
+     }
+     else if (chart.COCOMOType == 1){
+          temp = Math.pow(kloc, semiDetachedB);
+          return semiDetachedA * temp;
+	}
+     else{
+          temp = Math.pow(kloc, embeddedB);
+          return embeddedA * temp;
+	}
+}
+
+function convertFPtoKLOC(data){
+     if (chart.langType == 0){
+          return (data * 54) / 1000;
+     }
+     else if (chart.langType == 1){
+          return (data * 50) / 1000;
+     }
+     else if (chart.langType == 2){
+          return (data * 53) / 1000;
+     }
+     else if (chart.langType == 3){
+          return (data * 47) / 1000;
+     }
+     else if (chart.langType == 4){
+          return (data * 34) / 1000;
+     }
+     else{
+          return (data * 42) / 1000;
+	}
+}
+
+function sumPoints(data){
+     var total = 0;
+
+     for(var i = 0; i < data.length; i++)
+     total += data[i].y;
+     return total;
 }

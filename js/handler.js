@@ -11,8 +11,6 @@ Course: CIS 375.001, Software Engineering
 
 */
 
-// globals
-
 // global variables for defining how the graph looks
 var borderWidth = 3; //px
 var tickWidth = 2; // px
@@ -21,6 +19,11 @@ var strokeColor = '#000000'
 var canvas = null;
 var innerGraphBuffer = 75;
 var dotSize = 4;
+
+//global variables for cost calculation
+var organicA = 2.4, organicB = 1.05
+var semiDetachedA = 3, semiDetachedB = 1.12;
+var embeddedA = 3.6, embeddedB = 1.2;
 
 // chart object
 var chart = new Chart();
@@ -39,6 +42,7 @@ var thirdPointTextbox = document.getElementById("third-point-text");
 var timeIntervalDropdown = document.getElementById("time-interval-drop");
 var metricDropdown = document.getElementById("work-metric-drop");
 var progLangDropdown = document.getElementById("language-metric-drop");
+var COCOMODropdown = document.getElementById("COCOMO-model")
 var maxLabel = document.getElementById("graph-max");
 var minLabel = document.getElementById("graph-min");
 var mean = document.getElementById("graph-mean");
@@ -52,6 +56,7 @@ var estimateText = document.getElementById("estimate-progress-text");
 function addRandom() {
 	var index = chart.numberOfPoints + 1;
 	var val = Math.random() * 20 + 100;
+
 	console.log([index, val]);
 	chart.addPoint(new Point(index, val));
 }
@@ -119,16 +124,13 @@ loadButton.addEventListener("click", function() {
 addInitialButton.addEventListener("click", function() {
 	 var x = firstPointTextbox.value,
 		y = secondPointTextbox.value,
-		z = thirdPointTextbox.value;
+		z = thirdPointTextbox.value,
+		a = estimateText.value;
 
-	var a = estimateText.value;
-
-	if(x.length === 0 || y.length === 0 || z.length === 0)
+	if(x.length === 0 || y.length === 0 || z.length === 0 || a.length === 0)
 		return;
-
-	if(x === null || y === null || z === null || isNaN(x) || isNaN(y) || isNaN(z) || chart === null)
+	if(x === null || y === null || z === null || a === null || isNaN(x) || isNaN(y) || isNaN(z) || isNaN(a) || chart === null)
 		return;
-
 	chart.addPoint(new Point(1, parseFloat(x)));
 	chart.addEstPoint(new EstPoint(1, parseFloat(a)));
 	chart.addPoint(new Point(2, parseFloat(y)));
@@ -147,10 +149,8 @@ addButton.addEventListener("click", function() {
 
 	if(x.length == 0)
 		return;
-
 	if(x == null || isNaN(x) || chart === null)
 		return;
-
 	chart.addPoint(new Point(chart.numberOfPoints + 1, parseFloat(x)));
 	chart.addEstPoint(new EstPoint(chart.numberOfEstPoints + 1, parseFloat(y * (chart.numberOfEstPoints + 1))));
 	update();
@@ -159,6 +159,7 @@ addButton.addEventListener("click", function() {
 // Handle Time Interval dropdown
 timeIntervalDropdown.onchange = function() {
 	var val = timeIntervalDropdown.value;
+
 	if(val === "days")
 		chart.timeType = 0;
 	if(val === "weeks")
@@ -171,6 +172,7 @@ timeIntervalDropdown.onchange = function() {
 // Handle Metric Type dropdown
 metricDropdown.onchange = function() {
 	var val = metricDropdown.value;
+
 	if(val === "loc")
 		chart.metricType = 0;
 	if(val === "fp")
@@ -181,6 +183,7 @@ metricDropdown.onchange = function() {
 //Handle Programming Language dropdown
 progLangDropdown.onchange = function() {
 	var val = progLangDropdown.value;
+
 	if(val === "cSharp")
 		chart.langType = 0;
 	if(val === "cPlusPlus")
@@ -193,6 +196,19 @@ progLangDropdown.onchange = function() {
 		chart.langType = 4;
 	if(val === "visualBasic")
 		chart.langType = 5;
+	update();
+};
+
+// Handle COCOMO Model dropdown
+COCOMODropdown.onchange = function() {
+	var val = COCOMODropdown.value;
+
+	if(val === "organic")
+		chart.COCOMOType = 0;
+	if(val === "semi-detached")
+		chart.COCOMOType = 1;
+	if(val === "embedded")
+		chart.COCOMOType = 2;
 	update();
 };
 
@@ -234,6 +250,16 @@ function updateDropdowns() {
 	else{
 		progLangDropdown.value = "visualBasic"
 	}
+
+	if (chart.COCOMOType === 0){
+		COCOMODropdown.value = "organic"
+	}
+	else if (chart.COCOMOType === 1){
+		COCOMODropdown.value = "semi-detached"
+	}
+	else{
+		COCOMODropdown.value = "embedded"
+	}
 }
 
 function updateLabels() {
@@ -242,13 +268,13 @@ function updateLabels() {
 	mean.value = chart.mean.toFixed(3);
 	deviation.value = chart.stdDeviation.toFixed(3);
 	variance.value = chart.variance.toFixed(3);
-	estimateCost.value = chart.estCost.toFixed(3);
-	actualCost.value = chart.actCost.toFixed(3);
+	estimateCost.value = chart.estimateCost.toFixed(3);
+	actualCost.value = chart.actualCost.toFixed(3);
 }
 
 // bring all these update functions into one for easier editing later on
 function update() {
 	updateDropdowns();
 	updateLabels();
-	needsToUpdate =  true;
+	needsToUpdate = true;
 }

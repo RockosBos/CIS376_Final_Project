@@ -12,7 +12,7 @@ Course: CIS 375.001, Software Engineering
 */
 
 // chart class definition
-function Chart(metric=0, time=0, programLang=0) {
+function Chart(metric=0, time=0, programLang=0, COCOMO=0) {
 	this.numberOfPoints = 0;
 	this.numberOfEstPoints = 0;
 	this.points = [];
@@ -20,6 +20,7 @@ function Chart(metric=0, time=0, programLang=0) {
 	this.metricType = metric;
 	this.timeType = time;
 	this.langType = programLang;
+	this.COCOMOType = COCOMO;
 	this.mean = 0;
 	this.median = 0;
 	this.max = 0;
@@ -40,14 +41,13 @@ Chart.prototype.update = function () {
 	this.median = calcMetricMed(this.points);
 	this.max = calcMetricMax(this.points);
 	this.estMax = calcEstimateMetricMax(this.points, this.estPoints);
-	this.pointTotal = calcPointTotal(this.points);
 	this.min = calcMetricMin(this.points);
 	this.maxTime = calcTimeMax(this.points);
 	this.minTime = calcTimeMin(this.points);
 	this.variance = calcMetricVar(this.points);
 	this.stdDeviation = calcMetricStdDev(this.points);
-	this.estimateCost = 0;
-	this.actualCost = 0;
+	this.estimateCost = calcEstimateCOCOMO(this.estPoints);
+	this.actualCost = calcActualCOCOMO(this.points);
 	needsToUpdate = true;
 }
 
@@ -72,20 +72,6 @@ Chart.prototype.addEstPoint = function(point) {
 		return;
 	this.estPoints.push(point);
 	this.estPoints.sort(function(a,b) {
-		if(a.x > b.x)
-			return 1;
-		if(a.x < b.x)
-			return -1;
-		return 0;
-	});
-	this.update();
-} 
-
-Chart.prototype.addActPoint = function(point) {
-	if(!(point instanceof ActPoint))
-		return;
-	this.actPoints.push(point);
-	this.actPoints.sort(function(a,b) {
 		if(a.x > b.x)
 			return 1;
 		if(a.x < b.x)

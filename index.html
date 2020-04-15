@@ -92,11 +92,20 @@ Professor: Marouane Kessentini
 	<strong>Programming Language:</strong><br>
 	<select name="language_metric_list" id="language-metric-drop" dir="rtl">
 		<option value="cSharp" selected="selected">#C</option>
-		<option value="cPlusPlus">C++</option>
+		<option value="cPlusPlus">++C</option>
 		<option value="javaLanguage">Java</option>
 		<option value="javascriptLanguage">Javascript</option>
 		<option value="HTML">HTML</option>
 		<option value="visualBasic">Visual Basic</option>
+	</select>
+	<br>
+	
+	<strong>Basic COCOMO Model:</strong><br>
+	
+	<select name="COCOMO_Model" id="COCOMO-model" dir="rtl">
+		<option value="organic" selected="selected">Organic</option>
+		<option value="semi-detached">Semi-Detached</option>
+		<option value="embedded">Embedded</option>
 	</select>
 	<br>
 	
@@ -136,7 +145,7 @@ Professor: Marouane Kessentini
 </div>
 
 <!-- Add a Point container that can be set to shown -->	
-<div id="running-div" class="relative-hidden" style="text-align: right; left: 1610px; top: -414px; width: 157px;">
+<div id="running-div" class="relative-hidden" style="text-align: right; left: 1610px; top: -369px; width: 157px;">
 	<strong>Add a Point:<br></strong>
 	<input name="add_point" id="add-point-text" size="15" dir="rtl"><br>
 	<button type="submit" id="submit-add" style="width: 145px">Add a point...</button>

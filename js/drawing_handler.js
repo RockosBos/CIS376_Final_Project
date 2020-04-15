@@ -116,6 +116,7 @@ function drawGraph() {
 		return;
 	}
 
+	//change from hidden to shown element
 	document.getElementById("initial-div").className = "relative-hidden";
 	document.getElementById("running-div").className = "relative-shown";
 
@@ -226,6 +227,7 @@ function drawGraph() {
 		text((avg - 3*s).toFixed(1), innerGraphBuffer - tickLength, yPos);
 	}
 
+	//scaling for y axis, limit 10,000 in FPs or LOC
 	textSize(12);
 	for (var i = 1; i < estYMax; i++){
 		strokeWeight(tickWidth);
@@ -356,7 +358,7 @@ function drawGraph() {
 
 	textAlign(CENTER, CENTER);
 
-	// plot points
+	// plot actual points
 	for(var i = 0, total = 0; i < chart.numberOfPoints; i++) {
 		// tick mark and label on x axis
 		var xPos = map(chart.points[i].x, xMin, xMax, innerGraphBuffer, estimateGraphOrigin - innerGraphBuffer / 2);
@@ -409,7 +411,7 @@ function drawGraph() {
 			text(chart.points[i].x, estXPos, height - estimateBuffer + tickLength + 2);
 		}
 
-		// plot point
+		// plot point itself
 		var x = xPos;
 		var y = map(chart.points[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
 		var x1 = estXPos;
@@ -436,85 +438,11 @@ function drawGraph() {
 	textSize(12);
 	textAlign(CENTER, CENTER);
 	strokeWeight(0);
-	text('Project Tracker Variance', (width - 300) / 2, 25);
-	text('Time Value: (' + chart.getTime() + ')', (width - 300) / 2, height - 25);
+	text('Project Tracker Variance', (width - estimateGraphOrigin), 25);
+	text('Time Value for Both Graphs: (' + chart.getTime() + ')', (width - estimateGraphOrigin), height - 25);
 	translate(width / 2, height / 2);
 	rotate(-PI/2);
 	text('Metric Value: (' + chart.getMetric() + ')', 0, -(width / 2) + 15);
 	rotate(PI/2);
 	translate(0, 0);
 }
-
-/*
-function drawBudgetGraph(){
-	//draw lines first, reason listed above in drawVarianceGraph()
-	/*	lastEstPoint = null;
-	for(var i = 0; i < chart.numberOfEstPoints; i++) {
-		var x = map(chart.estPoints[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
-		var y = map(chart.estPoints[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
-
-		// draw line between points
-		if(lastEstPoint == null) {
-			lastEstPoint = [x,y];
-		}
-		else {
-			strokeWeight(tickWidth);
-			stroke(0, 255, 0);
-			line(lastEstPoint[0], lastEstPoint[1], x, y);
-			stroke(0);
-			lastEstPoint = [x,y];
-			stroke(0);
-		}
-	}
-	*/
-	
-	//plot estimate points
-	/*
-	for(var i = 0; i < budgetChart.numberOfEstPoints; i++) {
-		// tick mark and label on x axis
-		var xPos = map(budgetChart.estPoints[i].x, xMin, xMax, innerGraphBuffer, width - innerGraphBuffer / 2);
-		if(budgetChart.numberOfEstPoints > 200) {
-			strokeWeight(tickWidth / 2);
-		}
-		else {
-			strokeWeight(tickWidth);
-		}
-		stroke(0, 255, 0);
-		line(xPos, height - innerGraphBuffer + tickLength / 2, xPos, height - innerGraphBuffer - tickLength / 2);
-		stroke(0);
-		strokeWeight(0);
-		if(budgetChart.numberOfEstPoints > 40){
-			textSize(8);
-		}
-		else {
-			textSize(12);
-		}
-
-		// scale the label text so that we avoid overlapping text
-		// highest level of scaling works well with data sets less than 500 points
-		if(budgetChart.numberOfEstPoints < 75) {
-			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
-		}
-		else if(budgetChart.numberOfEstPoints > 75 && budgetChart.numberOfEstPoints <= 105 && budgetChart.estPoints[i].x%2==1) {
-			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
-		}
-		else if(budgetChart.numberOfEstPoints > 105 && budgetChart.numberOfEstPoints <= 145 && budgetChart.estPoints[i].x%3==0) {
-			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
-		}
-		else if(budgetChart.numberOfEstPoints > 145 && budgetChart.numberOfEstPoints <= 200 && budgetChart.estPoints[i].x%5==0) {
-			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
-		}
-		else if(budgetChart.numberOfEstPoints > 200 && budgetChart.estPoints[i].x%10==0) {
-			text(budgetChart.estPoints[i].x, xPos, height - innerGraphBuffer + tickLength + 2)
-		}
-
-		// plot point
-		var x = xPos;
-		var y = map(budgetChart.estPoints[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
-		
-		strokeWeight(dotSize);
-		ellipse(x, y, dotSize, dotSize);
-		stroke(0);
-	}
-}
-	*/
