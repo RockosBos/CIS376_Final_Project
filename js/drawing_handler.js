@@ -10,6 +10,20 @@ Course: CIS 375.001, Software Engineering
 
 */
 
+/*
+Refactoring and ehancements.  Use of old project approved upon old team members' testimonies (old teammate being Jacob Wisniewski)
+
+Course: CIS 376, Software Engineering II
+Project Tracker, PEBCAK Inc.
+
+Jacob Wisniewski
+Nicholas Kessey
+Aouni Halaweh
+Ethan Hoshowski
+
+Professor: Marouane Kessentini
+*/
+
 // p5 function: gets called on script startup
 function setup() {
 	// set up a canvas to use
@@ -89,6 +103,7 @@ function dashedLine(x1, y1, x2, y2, l, g) {
 var counter = 0;
 
 // main function to draw the actual graph
+//Added new section of graphic, with scaling x and y-axes.  Also drew new lines and new points and improved upon old code with global variables for the graph (useful for initial boundary and inner graph design)
 function drawGraph() {
 	// border for entire graph
 	stroke(0);
@@ -139,7 +154,7 @@ function drawGraph() {
 	var s = chart.stdDeviation;
 	var min = chart.min;
 	var max = chart.max;
-	var estMax = chart.estMax;
+	var estMax = chart.estMax; //used for ultimate max of estimate vs actual graph, winner of either type of point wins
 	var estYMax = 0;
 	var minTime = chart.minTime;
 	var maxTime = chart.maxTime;
@@ -147,7 +162,7 @@ function drawGraph() {
 	// come up with optimal bounds for y-axis
 	var yMin = 0;
 	var yMax = 0;
-	var estYMin = 0;
+	var estYMin = 0; //never going below 0
 
 	//Left graph std deviations as limits
 	if(s !== 0) {
@@ -227,7 +242,7 @@ function drawGraph() {
 		text((avg - 3*s).toFixed(1), innerGraphBuffer - tickLength, yPos);
 	}
 
-	//scaling for y axis, limit 10,000 in FPs or LOC
+	//scaling for y axis on estimate vs actual graph, soft limit of 10,000 in FPs or LOC
 	textSize(12);
 	for (var i = 1; i < estYMax; i++){
 		strokeWeight(tickWidth);
@@ -315,6 +330,7 @@ function drawGraph() {
 	}
 
 	//draw lines between estimate points
+	
 	lastPoint = null;
 	for(var i = 0; i < chart.numberOfEstPoints; i++) {
 		var x = map(chart.estPoints[i].x, xMin, xMax, estimateGraphOrigin + estimateBuffer, width - estimateBuffer);
@@ -335,6 +351,7 @@ function drawGraph() {
 	}
 
 	//draw lines between actual points
+	//Same sequence adapted for actual points
 	lastPoint = null;
 	for(var i = 0, total = 0; i < chart.numberOfPoints; i++){
 		total += chart.points[i].y;
@@ -412,6 +429,7 @@ function drawGraph() {
 		}
 
 		// plot point itself
+		//adapted for all point types
 		var x = xPos;
 		var y = map(chart.points[i].y, yMax, yMin, innerGraphBuffer, height - innerGraphBuffer);
 		var x1 = estXPos;
@@ -434,12 +452,13 @@ function drawGraph() {
 		stroke(0);
 	}
 
-	// other labels
+	// other labels, misc formatting for graphs
 	textSize(12);
 	textAlign(CENTER, CENTER);
 	strokeWeight(0);
-	text('Project Tracker Variance', (width - estimateGraphOrigin), 25);
-	text('Time Value for Both Graphs: (' + chart.getTime() + ')', (width - estimateGraphOrigin), height - 25);
+	text('Project Tracker Variance', estimateGraphOrigin / 2, 25);
+	text('Project Tracker Estimate vs Actual', estimateGraphOrigin + ((width - estimateGraphOrigin) / 2), 25);
+	text('Time Value for Both Graphs: (' + chart.getTime() + ')', estimateGraphOrigin / 2, height - 25);
 	translate(width / 2, height / 2);
 	rotate(-PI/2);
 	text('Metric Value: (' + chart.getMetric() + ')', 0, -(width / 2) + 15);

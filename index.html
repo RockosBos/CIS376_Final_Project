@@ -11,9 +11,10 @@ Course: CIS 375.001, Software Engineering
 
 ----------------------------------------------------
 
-Refactoring and ehancements
+Refactoring and ehancements.  Use of old project approved upon old team members' testimonies (old teammate being Jacob Wisniewski)
 
 Course: CIS 376, Software Engineering II
+Project Tracker, PEBCAK Inc.
 
 Jacob Wisniewski
 Nicholas Kessey
@@ -89,6 +90,7 @@ Professor: Marouane Kessentini
 	</select>
 	<br>
 	
+	<!-- New selection menu added and maintained in handler -->
 	<strong>Programming Language:</strong><br>
 	<select name="language_metric_list" id="language-metric-drop" dir="rtl">
 		<option value="cSharp" selected="selected">#C</option>
@@ -100,8 +102,8 @@ Professor: Marouane Kessentini
 	</select>
 	<br>
 	
+	<!-- New selection menu added and maintained in handler -->
 	<strong>Basic COCOMO Model:</strong><br>
-	
 	<select name="COCOMO_Model" id="COCOMO-model" dir="rtl">
 		<option value="organic" selected="selected">Organic</option>
 		<option value="semi-detached">Semi-Detached</option>
@@ -109,6 +111,7 @@ Professor: Marouane Kessentini
 	</select>
 	<br>
 	
+	<!-- New textbox, setting linear guide for estimated project progress, becomes readonly after applying first three points -->
 	<strong>Estimated LOC/FP per Interval:</strong><br>
 		<input name="estimate-progress" id="estimate-progress-text" size="15" dir="rtl"><br>
 	<br>
@@ -132,6 +135,7 @@ Professor: Marouane Kessentini
 			Mean:<input id="graph-mean" name="graph_mean" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
 		    Deviation:<input id="graph-deviation" name="graph_deviation" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
 		    Variance:<input id="graph-variance" name="graph_variance" readonly="readonly" size="5" dir="rtl" style="background-color: #DCDCDC"><br>
+		    <!-- Added for new metrics to track -->
 		    Estimate Cost (P/Mo):<input id="graph-estimate-cost" name="graph_estimate_cost" readonly="readonly" size="5" dir="rtl" style="background-color: #B19CD9"><br>
 		    Actual Cost (P/Mo):<input id="graph-actual-cost" name="graph_actual_cost" readonly="readonly" size="5" dir="rtl" style="background-color: #ADD8E6"><br>
 		</strong>
@@ -144,7 +148,9 @@ Professor: Marouane Kessentini
 		<input type="file" id="file-input" style="display: none;">
 </div>
 
-<!-- Add a Point container that can be set to shown -->	
+<!-- Add a Point container that can be set to shown
+
+	 Expanded for additional estimate vs actual progress graph, maintained on the same graphic using p5.js open source library for drawing functions -->	
 <div id="running-div" class="relative-hidden" style="text-align: right; left: 1610px; top: -369px; width: 157px;">
 	<strong>Add a Point:<br></strong>
 	<input name="add_point" id="add-point-text" size="15" dir="rtl"><br>
@@ -153,7 +159,7 @@ Professor: Marouane Kessentini
 
 <!--Script import -->
 <script src="js/data.js"></script>
-<script src="js/p5.js"></script>
+<script src="js/p5.js"></script> <!-- open source library -->
 <script src="js/statistics_handler.js"></script>
 <script src="js/handler.js"></script>
 <script src="js/drawing_handler.js"></script>

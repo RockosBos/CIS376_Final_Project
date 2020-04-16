@@ -4,11 +4,25 @@ data structures for CCASPC
 defines the necessary data structures and their behaviors
 
 co-authors: Christopher Ciolek
-			Nicholas Spencer
+		  Nicholas Spencer
 
 Professor: Bruce Maxim
 Course: CIS 375.001, Software Engineering
 
+*/
+
+/*
+Refactoring and ehancements.  Use of old project approved upon old team members' testimonies (old teammate being Jacob Wisniewski)
+
+Course: CIS 376, Software Engineering II.
+Project Tracker, PEBCAK Inc.
+
+Jacob Wisniewski
+Nicholas Kessey
+Aouni Halaweh
+Ethan Hoshowski
+
+Professor: Marouane Kessentini
 */
 
 // chart class definition
@@ -67,6 +81,7 @@ Chart.prototype.addPoint = function(point) {
 	this.update();
 }
 
+//Adopted from old method, utilizing estimate point values instead
 Chart.prototype.addEstPoint = function(point) {
 	if(!(point instanceof EstPoint))
 		return;
@@ -117,6 +132,7 @@ Point.prototype.setTime = function(time) {
 }
 
 //estPoint class definition
+//New class for estimate point values, the same as regular points
 function EstPoint(time=0,val=0){
 	this.x = time;
 	this.y = val;

@@ -8,8 +8,23 @@ author: Christopher Ciolek
 Professor: Bruce Maxim
 Course: CIS 375.001, Software Engineering
 
-COCOMO FP to LOC calue determined via https://www.qsm.com/resources/function-point-languages-table using averages for languages
 */
+
+/*
+Refactoring and ehancements.  Use of old project approved upon old team members' testimonies (old teammate being Jacob Wisniewski)
+
+Course: CIS 376, Software Engineering II
+Project Tracker, PEBCAK Inc.
+
+Jacob Wisniewski
+Nicholas Kessey
+Aouni Halaweh
+Ethan Hoshowski
+
+Professor: Marouane Kessentini
+*/
+
+//COCOMO FP to LOC value determined via https://www.qsm.com/resources/function-point-languages-table using averages for applicable languages
 
 // Each funtion uses three points of decimal accuracy except for the median function
 var data = [{x:45,y:32},{x:1,y:3},{x:12,y:43},{x:4,y:23},{x:21,y:23},{x:12,y:5}]
@@ -182,25 +197,28 @@ function calcMetricMed(data){
     return ((data[half-1].y + data[half].y) / 2.0);
 }
 
-function calcEstimateCOCOMO(data){
+//Checks for FPs or LOC and then result is converted into KLOC.  Uses Basic COCOMO coefficients and determines based on webpage selection.
+function calcEstimateCOCOMO(estimatePoints){
      var fpToKloc = 0, kloc = 0, temp = 0;
 
+     //Check for FPs or LOC
      if (chart.metricType == 1){
-          for (var i = 0; i < data.length; i++){
-               if (i == data.length - 1){
-                   temp = data[i].y;
+          for (var i = 0; i < estimatePoints.length; i++){
+               if (i == estimatePoints.length - 1){
+                   temp = estimatePoints[i].y;
                    fpToKloc = convertFPtoKLOC(temp);
                    kloc = fpToKloc;
                }
           }
 	}
      else{
-          for (var i = 0; i < data.length; i++){
-               if (i == data.length - 1)
-                   kloc = data[i].y;
+          for (var i = 0; i < estimatePoints.length; i++){
+               if (i == estimatePoints.length - 1)
+                   kloc = estimatePoints[i].y;
           }
           kloc /= 1000; 
 	}
+     //Provides proper coefficients based on current webpage selection
      if (chart.COCOMOType == 0){
           temp = Math.pow(kloc, organicB);
           return organicA * temp;
@@ -216,16 +234,17 @@ function calcEstimateCOCOMO(data){
      
 }
 
-function calcActualCOCOMO(data){
+//Checks for FPs or LOC and then result is converted into KLOC.  Uses Basic COCOMO coefficients and determines based on webpage selection.
+function calcActualCOCOMO(actualPoints){
      var fpToKloc = 0, kloc = 0, temp = 0;
 
      if(chart.metricType == 1){
-          temp = sumPoints(data);
+          temp = sumPoints(actualPoints);
           fpToKloc = convertFPtoKLOC(temp);
           kloc = fpToKloc;
 	}
      else{
-          kloc = sumPoints(data);
+          kloc = sumPoints(actualPoints);
           kloc /= 1000;
 	}
      if (chart.COCOMOType == 0){
@@ -242,31 +261,33 @@ function calcActualCOCOMO(data){
 	}
 }
 
-function convertFPtoKLOC(data){
+//Converts FPs to KLOC based on programming language selected
+function convertFPtoKLOC(FPs){
      if (chart.langType == 0){
-          return (data * 54) / 1000;
+          return (FPs * 54) / 1000;
      }
      else if (chart.langType == 1){
-          return (data * 50) / 1000;
+          return (FPs * 50) / 1000;
      }
      else if (chart.langType == 2){
-          return (data * 53) / 1000;
+          return (FPs * 53) / 1000;
      }
      else if (chart.langType == 3){
-          return (data * 47) / 1000;
+          return (FPs * 47) / 1000;
      }
      else if (chart.langType == 4){
-          return (data * 34) / 1000;
+          return (FPs * 34) / 1000;
      }
      else{
-          return (data * 42) / 1000;
+          return (FPs * 42) / 1000;
 	}
 }
 
-function sumPoints(data){
+//Used to find Sum of Actual points, since they are stored as coordinates for variance graph
+function sumPoints(dataPoints){
      var total = 0;
 
-     for(var i = 0; i < data.length; i++)
-     total += data[i].y;
+     for(var i = 0; i < dataPoints.length; i++)
+     total += dataPoints[i].y;
      return total;
 }

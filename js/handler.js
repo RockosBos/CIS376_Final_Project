@@ -4,11 +4,25 @@ main handler for CCASPC
 stores global variables and links up UI to functionality
 
 co-authors: Selawai Mona
-			Nicholas Spencer
+		  Nicholas Spencer
 
 Professor: Bruce Maxim
 Course: CIS 375.001, Software Engineering
 
+*/
+
+/*
+Refactoring and ehancements.  Use of old project approved upon old team members' testimonies (old teammate being Jacob Wisniewski)
+
+Course: CIS 376, Software Engineering II
+Project Tracker, PEBCAK Inc.
+
+Jacob Wisniewski
+Nicholas Kessey
+Aouni Halaweh
+Ethan Hoshowski
+
+Professor: Marouane Kessentini
 */
 
 // global variables for defining how the graph looks
@@ -120,7 +134,7 @@ loadButton.addEventListener("click", function() {
 	fileInput.click();
 });
 
-// Add initial 3 points
+// Add initial 3 points, added code for new estimate points
 addInitialButton.addEventListener("click", function() {
 	 var x = firstPointTextbox.value,
 		y = secondPointTextbox.value,
@@ -142,7 +156,7 @@ addInitialButton.addEventListener("click", function() {
 	update();
 });
 
-// Add additional points
+// Add additional points, added changes to make estimate points in parallel
 addButton.addEventListener("click", function() {
 	var x = addPointTextBox.value;
 	var y = estimateText.value;
@@ -203,17 +217,17 @@ progLangDropdown.onchange = function() {
 COCOMODropdown.onchange = function() {
 	var val = COCOMODropdown.value;
 
-	if(val === "organic")
+	if(val == "organic")
 		chart.COCOMOType = 0;
-	if(val === "semi-detached")
+	if(val == "semi-detached")
 		chart.COCOMOType = 1;
-	if(val === "embedded")
+	if(val == "embedded")
 		chart.COCOMOType = 2;
 	update();
 };
 
 // |----------------------------------- HTML Element Label Updating -----------------------------------|
-
+//updated for programming language and type of COCOMO selections
 function updateDropdowns() {
 	if(chart.timeType === 0) {
 		timeIntervalDropdown.value = "days";
@@ -232,29 +246,29 @@ function updateDropdowns() {
 		metricDropdown.value = "fp";
 	}
 
-	if (chart.langType === 0){
+	if (chart.langType == 0){
 		progLangDropdown.value = "cSharp"
 	}
-	else if (chart.langType === 1){
+	else if (chart.langType == 1){
 		progLangDropdown.value = "cPlusPlus"
 	}
-	else if (chart.langType === 2){
+	else if (chart.langType == 2){
 		progLangDropdown.value = "javaLanguage"
 	}
-	else if (chart.langType === 3){
+	else if (chart.langType == 3){
 		progLangDropdown.value = "javascriptLanguage"
 	}
-	else if (chart.langType === 4){
+	else if (chart.langType == 4){
 		progLangDropdown.value = "HTML"
 	}
 	else{
 		progLangDropdown.value = "visualBasic"
 	}
 
-	if (chart.COCOMOType === 0){
+	if (chart.COCOMOType == 0){
 		COCOMODropdown.value = "organic"
 	}
-	else if (chart.COCOMOType === 1){
+	else if (chart.COCOMOType == 1){
 		COCOMODropdown.value = "semi-detached"
 	}
 	else{
@@ -268,6 +282,7 @@ function updateLabels() {
 	mean.value = chart.mean.toFixed(3);
 	deviation.value = chart.stdDeviation.toFixed(3);
 	variance.value = chart.variance.toFixed(3);
+	//new values need to be updated on webpage
 	estimateCost.value = chart.estimateCost.toFixed(3);
 	actualCost.value = chart.actualCost.toFixed(3);
 }
